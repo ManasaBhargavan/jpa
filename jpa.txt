@@ -1,0 +1,133 @@
+
+
+//persisting data
+Employee emp=new Employee();
+	emp.setEmployeeName("John");     
+	emp.setEmployeeSalary(85000);
+	em.persist(emp);
+
+
+//fetch data
+		Employee emp=em.find(Employee.class, 3);
+		if(emp==null){
+			System.out.println("Employee not found");
+		}
+		else
+		{
+			System.out.println(emp.getEmployeeName()+" "+emp.getEmployeeSalary());
+}
+
+******************************************************
+
+To remove entity from managed state
+
+em.detach(emp);
+
+**************************************************************
+To clear all entities 
+
+em.clear();
+***********************************************************
+
+To find and remove an item
+
+Employee emp=em.find(Employee.class, 1);
+		if(emp==null){
+			System.out.println("Employee not found");
+		}
+		else
+		{
+			em.remove(emp);
+			System.out.println("Employee removed successfully");
+		}
+
+**********************************************************
+To find and update
+
+Employee emp=em.find(Employee.class,2);
+		if(emp==null){
+			System.out.println("Employee not found");
+		}
+		else
+		{
+			emp.setEmployeeName("Shyam");
+			em.merge(emp);
+			
+			System.out.println("Employee name updated successfully");
+		}
+
+*******************************************************
+Query
+
+Query qry=em.createQuery("from Employee");
+		List list=qry.getResultList();
+		
+		for(Object obj : list)
+		{
+			Employee emp=(Employee) obj;
+			System.out.println(emp.getEmployeeId()+" "+emp.getEmployeeName()+" "+emp.getEmployeeSalary());
+		}
+		em.getTransaction().commit();
+		System.out.println("Employee added to database");
+*********************************************************
+
+Typed Query (multiple rows)
+
+TypedQuery<Employee> qry=em.createQuery("from Employee",Employee.class);
+		
+		List<Employee> list=qry.getResultList();
+		
+		for(Employee emp : list)
+		{
+			System.out.println(emp.getEmployeeId()+" "+emp.getEmployeeName()+" "+emp.getEmployeeSalary());
+		}
+*******************************************************		
+
+Typed Query (single row)
+
+TypedQuery<Employee> qry=em.createQuery("from Employee where employeeId=3",Employee.class);
+		
+		Employee emp=qry.getSingleResult();
+		
+		
+			System.out.println(emp.getEmployeeId()+" "+emp.getEmployeeName()+" "+emp.getEmployeeSalary());
+*******************************************************
+POSITION PARAMETER
+
+TypedQuery<Employee> qry=em.createQuery("from Employee where employeeId=?",Employee.class);
+		
+		qry.setParameter(1,3);
+		Employee emp=qry.getSingleResult();
+		
+		
+			System.out.println(emp.getEmployeeId()+" "+emp.getEmployeeName()+" "+emp.getEmployeeSalary());
+****************************************************
+NAMED PARAMETER
+
+TypedQuery<Employee> qry=em.createQuery("from Employee where employeeId=:id",Employee.class);
+		
+		qry.setParameter("id",3);
+		Employee emp=qry.getSingleResult();
+		
+		
+			System.out.println(emp.getEmployeeId()+" "+emp.getEmployeeName()+" "+emp.getEmployeeSalary());
+
+***************************************************
+
+INCLUDING QUERY IN THE CLASS
+
+IN CLASS
+
+@NamedQuery(name="viewAllEmployee",query="from Employee")
+
+TEST CLASS
+
+
+		TypedQuery<Employee> qry=em.createNamedQuery("viewAllEmployee",Employee.class);
+		List<Employee> list=qry.getResultList();
+		for(Employee emp : list)
+		{
+			System.out.println(emp.getEmployeeId()+" "+emp.getEmployeeName()+" "+emp.getEmployeeSalary());
+		}
+***********************************************************
+		
